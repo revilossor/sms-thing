@@ -11,5 +11,8 @@
     "url": "git@github.com:revilossor/sms-thing.git"
   },
   "author": "oliver.ross@hotmail.com",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "lerna": "^4.0.0"
+  }
 }
