@@ -19,6 +19,9 @@
     "*.md": "markdownlint --fix",
     "*.{js,ts,json,md}": "prettier --write"
   },
+  "jest": {
+    "passWithNoTests": true
+  },
   "devDependencies": {
     "husky": "^7.0.4",
     "jest": "^27.5.1",
