@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "."
+    "url": "git@github.com:revilossor/sms-thing.git"
   },
   "author": "oliver.ross@hotmail.com",
   "license": "ISC"
