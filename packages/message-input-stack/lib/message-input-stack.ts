@@ -51,7 +51,6 @@ export class MessageInputStack extends Stack {
       }
     })
 
-    // TODO add dlq for delivery failure to service integration
     api.root.addMethod('POST',
       new AwsIntegration({
         service: 'sns',
