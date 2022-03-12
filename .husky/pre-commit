@@ -5,4 +5,4 @@ set -e
 
 npx lint-staged
 
-npm run test -- --since HEAD~1 -- -o
+npm run test -- -- -o

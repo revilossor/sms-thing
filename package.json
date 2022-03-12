@@ -10,14 +10,17 @@
   "author": "oliver.ross@hotmail.com",
   "main": "index.js",
   "scripts": {
-    "lint": "npm run lint:prettier",
+    "postinstall": "lerna bootstrap",
+    "lint": "npm run lint:prettier && npm run lint:standard",
     "lint:prettier": "prettier --check .",
+    "lint:standard": "ts-standard .",
     "test": "lerna run test"
   },
   "lint-staged": {
     "package.json": "sort-package-json",
     "*.md": "markdownlint --fix",
-    "*.{js,ts,json,md}": "prettier --write"
+    "*.{js,ts,json,md}": "prettier --write",
+    "*.{js,ts}": "ts-standard --fix"
   },
   "devDependencies": {
     "husky": "^7.0.4",
@@ -25,6 +28,7 @@
     "lint-staged": "^12.3.5",
     "markdownlint-cli": "^0.31.1",
     "prettier": "^2.5.1",
-    "sort-package-json": "^1.54.0"
+    "sort-package-json": "^1.54.0",
+    "ts-standard": "^11.0.0"
   }
 }

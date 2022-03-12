@@ -19,5 +19,4 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run test
-
 # npx lerna run deploy — since HEAD~1 in deploy
