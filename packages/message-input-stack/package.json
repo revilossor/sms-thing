@@ -6,7 +6,7 @@
     "url": "git@github.com:revilossor/sms-thing.git"
   },
   "scripts": {
-    "deploy": "npm run cdk deploy -- --require-approval never",
+    "deploy": "cdk deploy -- --require-approval never",
     "test": "jest"
   },
   "dependencies": {
