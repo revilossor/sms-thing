@@ -1,3 +1,5 @@
 build
 node_modules
 package-lock.json
+packages/message-input-stack/**/*.ts
+packages/message-input-stack/**/*.js
