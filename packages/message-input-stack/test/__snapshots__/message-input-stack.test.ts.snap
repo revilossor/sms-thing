@@ -29,6 +29,11 @@ Object {
         ],
       },
     },
+    "SendMessageTopicARN": Object {
+      "Value": Object {
+        "Ref": "SendMessageTopic124D0AB8",
+      },
+    },
   },
   "Parameters": Object {
     "BootstrapVersion": Object {

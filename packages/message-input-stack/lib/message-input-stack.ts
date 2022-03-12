@@ -1,5 +1,5 @@
 /* eslint-disable no-useless-escape */
-import { Stack, StackProps, Aws } from 'aws-cdk-lib'
+import { Stack, StackProps, Aws, CfnOutput } from 'aws-cdk-lib'
 import { Construct } from 'constructs'
 import { Topic } from 'aws-cdk-lib/aws-sns'
 import { Role, ServicePrincipal, PolicyDocument, PolicyStatement } from 'aws-cdk-lib/aws-iam'
@@ -103,6 +103,7 @@ export class MessageInputStack extends Stack {
       }
     )
 
-    // TODO output stuff for sms stack to import - apig execute too?
+    // eslint-disable-next-line no-new
+    new CfnOutput(this, 'SendMessageTopicARN', { value: topic.topicArn })
   }
 }
