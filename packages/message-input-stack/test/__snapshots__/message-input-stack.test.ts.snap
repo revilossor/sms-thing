@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`SQS Queue Created 1`] = `
+exports[`Stack matches snapshot 1`] = `
 Object {
   "Outputs": Object {
     "MessagingApiEndpoint78487A17": Object {
@@ -123,7 +123,7 @@ Object {
       },
       "Type": "AWS::IAM::Role",
     },
-    "MessagingApiDeploymentDDE83BBC892564f1d5b71d8222f982dfa8c3ca98": Object {
+    "MessagingApiDeploymentDDE83BBC6baad3e47856979c6e9801a0a3ae43a4": Object {
       "DependsOn": Array [
         "MessagingApiPOSTDA209080",
         "MessagingApiSendMessageModelB218FB47",
@@ -143,7 +143,7 @@ Object {
       ],
       "Properties": Object {
         "DeploymentId": Object {
-          "Ref": "MessagingApiDeploymentDDE83BBC892564f1d5b71d8222f982dfa8c3ca98",
+          "Ref": "MessagingApiDeploymentDDE83BBC6baad3e47856979c6e9801a0a3ae43a4",
         },
         "RestApiId": Object {
           "Ref": "MessagingApi6D1F8F71",
@@ -267,8 +267,8 @@ Object {
               "type": "string",
             },
             "number": Object {
-              "maxLength": 15,
-              "minLength": 15,
+              "maximum": 15,
+              "minimum": 15,
               "type": "number",
             },
           },

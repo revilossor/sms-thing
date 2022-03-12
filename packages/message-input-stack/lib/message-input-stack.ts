@@ -11,6 +11,8 @@ export class MessageInputStack extends Stack {
   constructor (scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props)
 
+    // TODO maybe api key / rate limit?
+
     const topic = new Topic(this, 'SendMessageTopic', {
       fifo: true,
       contentBasedDeduplication: true,
@@ -36,12 +38,12 @@ export class MessageInputStack extends Stack {
         type: JsonSchemaType.OBJECT,
         properties: {
           message: {
-            type: JsonSchemaType.STRING // TODO max message length?
+            type: JsonSchemaType.STRING // TODO min/max message length?
           },
           number: {
             type: JsonSchemaType.NUMBER,
-            minLength: 15,
-            maxLength: 15
+            minimum: 15,
+            maximum: 15
           }
         },
         required: ['message', 'number'],
