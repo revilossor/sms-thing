@@ -11,6 +11,7 @@
   "scripts": {
     "build": "tsc",
     "cdk": "cdk",
+    "deploy": "npm run cdk deploy",
     "postinstall": "cp ../../tsconfig.json .",
     "test": "jest",
     "watch": "tsc -w"
