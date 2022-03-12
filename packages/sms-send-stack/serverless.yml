@@ -1,0 +1,21 @@
+service: SMSSEndStack
+frameworkVersion: "3"
+
+package:
+  patterns:
+    - "!**/*"
+    - dist/index.js
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: ${env:AWS_REGION}
+
+constructs:
+  SMSSendQueue:
+    type: queue
+    worker:
+      handler: dist/index.handler
+
+plugins:
+  - serverless-lift

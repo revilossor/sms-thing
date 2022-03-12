@@ -1,0 +1,21 @@
+{
+  "name": "sms-send-stack",
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:revilossor/sms-thing.git"
+  },
+  "scripts": {
+    "predeploy": "ncc build src/index.ts -o dist",
+    "deploy": "sls deploy",
+    "test": "jest --passWithNoTests"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.4.1",
+    "@vercel/ncc": "^0.33.3",
+    "jest": "^27.5.1",
+    "serverless-lift": "^1.1.2",
+    "ts-jest": "^27.1.3",
+    "typescript": "^4.6.2"
+  }
+}

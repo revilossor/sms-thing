@@ -5,16 +5,9 @@
     "type": "git",
     "url": "git@github.com:revilossor/sms-thing.git"
   },
-  "bin": {
-    "message-input-stack": "bin/message-input-stack.js"
-  },
   "scripts": {
-    "build": "tsc",
-    "cdk": "cdk",
     "deploy": "npm run cdk deploy -- --require-approval never",
-    "postinstall": "cp ../../tsconfig.json .",
-    "test": "jest",
-    "watch": "tsc -w"
+    "test": "jest"
   },
   "dependencies": {
     "aws-cdk-lib": "2.16.0",

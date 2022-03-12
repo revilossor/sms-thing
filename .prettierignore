@@ -1,5 +1,9 @@
 build
+cdk.out
+.serverless
 node_modules
 package-lock.json
 packages/message-input-stack/**/*.ts
 packages/message-input-stack/**/*.js
+packages/sms-send-stack/**/*.ts
+packages/sms-send-stack/**/*.js
