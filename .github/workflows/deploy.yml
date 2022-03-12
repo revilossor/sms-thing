@@ -1,13 +1,11 @@
 name: Deploy
-
 on: push
-  workflows:
-    - Test
-  branches:
-    - master
-  types:
-    - completed
-
+workflows:
+  - Test
+branches:
+  - master
+types:
+  - completed
 jobs:
   deploy:
     runs-on: ubuntu-latest

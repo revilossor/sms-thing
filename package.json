@@ -19,7 +19,7 @@
   "lint-staged": {
     "package.json": "sort-package-json",
     "*.md": "markdownlint --fix",
-    "*.{js,ts,json,md}": "prettier --write",
+    "*.{js,ts,json,md,yml}": "prettier --write",
     "*.{js,ts}": "ts-standard --fix"
   },
   "devDependencies": {
