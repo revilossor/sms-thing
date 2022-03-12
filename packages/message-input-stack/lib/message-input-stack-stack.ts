@@ -11,8 +11,11 @@ export class MessageInputStack extends Stack {
   constructor (scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props)
 
-    // TODO make FIFO
-    const topic = new Topic(this, 'SendMessageTopic')
+    const topic = new Topic(this, 'SendMessageTopic', {
+      fifo: true,
+      contentBasedDeduplication: true,
+      topicName: 'send-message-topic'
+    })
 
     const gatewayExecutionRole: any = new Role(this, 'GatewayExecutionRole', {
       assumedBy: new ServicePrincipal(MessageInputStack.APIG_SERVICE_PRINCIPAL),
@@ -29,6 +32,7 @@ export class MessageInputStack extends Stack {
     const api = new RestApi(this, 'MessagingApi')
 
     // TODO validation?
+    // TODO add dlq for delivery failure to service integration
     api.root.addMethod('POST',
       new AwsIntegration({
         service: 'sns',
