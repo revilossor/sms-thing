@@ -3,7 +3,7 @@ import { Stack, StackProps, Aws } from 'aws-cdk-lib'
 import { Construct } from 'constructs'
 import { Topic } from 'aws-cdk-lib/aws-sns'
 import { Role, ServicePrincipal, PolicyDocument, PolicyStatement } from 'aws-cdk-lib/aws-iam'
-import { RestApi, AwsIntegration, PassthroughBehavior } from 'aws-cdk-lib/aws-apigateway'
+import { RestApi, AwsIntegration, PassthroughBehavior, RequestValidator, Model, JsonSchemaType } from 'aws-cdk-lib/aws-apigateway'
 
 export class MessageInputStack extends Stack {
   private static readonly APIG_SERVICE_PRINCIPAL = 'apigateway.amazonaws.com'
@@ -31,7 +31,22 @@ export class MessageInputStack extends Stack {
 
     const api = new RestApi(this, 'MessagingApi')
 
-    // TODO validation?
+    const sendMessageModel: Model = api.addModel('SendMessageModel', {
+      schema: {
+        type: JsonSchemaType.OBJECT,
+        properties: {
+          message: {
+            type: JsonSchemaType.STRING
+          },
+          number: {
+            type: JsonSchemaType.NUMBER
+          }
+        },
+        required: ['message', 'number'],
+        additionalProperties: false
+      }
+    })
+
     // TODO add dlq for delivery failure to service integration
     api.root.addMethod('POST',
       new AwsIntegration({
@@ -68,8 +83,23 @@ export class MessageInputStack extends Stack {
         methodResponses: [
           { statusCode: '200' },
           { statusCode: '400' }
-        ]
+        ],
+        requestValidator: new RequestValidator(
+          this,
+          'RequestValidator',
+          {
+            restApi: api,
+            requestValidatorName: 'sendMessageBodyValidator',
+            validateRequestBody: true,
+            validateRequestParameters: false
+          }
+        ),
+        requestModels: {
+          'application/json': sendMessageModel
+        }
       }
     )
+
+    // TODO output stuff for sms stack to import - apig execute too?
   }
 }
