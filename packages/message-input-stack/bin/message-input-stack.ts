@@ -2,7 +2,7 @@
 /* eslint-disable no-new */
 import 'source-map-support/register'
 import * as cdk from 'aws-cdk-lib'
-import { MessageInputStack } from '../lib/message-input-stack-stack'
+import { MessageInputStack } from '../lib/message-input-stack'
 
 const app = new cdk.App()
 

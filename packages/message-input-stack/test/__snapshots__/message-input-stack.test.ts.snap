@@ -1,0 +1,330 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SQS Queue Created 1`] = `
+Object {
+  "Outputs": Object {
+    "MessagingApiEndpoint78487A17": Object {
+      "Value": Object {
+        "Fn::Join": Array [
+          "",
+          Array [
+            "https://",
+            Object {
+              "Ref": "MessagingApi6D1F8F71",
+            },
+            ".execute-api.",
+            Object {
+              "Ref": "AWS::Region",
+            },
+            ".",
+            Object {
+              "Ref": "AWS::URLSuffix",
+            },
+            "/",
+            Object {
+              "Ref": "MessagingApiDeploymentStageprod64BAE454",
+            },
+            "/",
+          ],
+        ],
+      },
+    },
+  },
+  "Parameters": Object {
+    "BootstrapVersion": Object {
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+  },
+  "Resources": Object {
+    "GatewayExecutionRole16B5E8DF": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "apigateway.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Policies": Array [
+          Object {
+            "PolicyDocument": Object {
+              "Statement": Array [
+                Object {
+                  "Action": "sns:Publish",
+                  "Effect": "Allow",
+                  "Resource": Object {
+                    "Ref": "SendMessageTopic124D0AB8",
+                  },
+                },
+              ],
+              "Version": "2012-10-17",
+            },
+            "PolicyName": "PublishMessagePolicy",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "MessagingApi6D1F8F71": Object {
+      "Properties": Object {
+        "Name": "MessagingApi",
+      },
+      "Type": "AWS::ApiGateway::RestApi",
+    },
+    "MessagingApiAccount295EFC8E": Object {
+      "DependsOn": Array [
+        "MessagingApi6D1F8F71",
+      ],
+      "Properties": Object {
+        "CloudWatchRoleArn": Object {
+          "Fn::GetAtt": Array [
+            "MessagingApiCloudWatchRole9E703F5A",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::ApiGateway::Account",
+    },
+    "MessagingApiCloudWatchRole9E703F5A": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "apigateway.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": Array [
+          Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:",
+                Object {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "MessagingApiDeploymentDDE83BBC0e533154786ab6901fdc7deb846ec796": Object {
+      "DependsOn": Array [
+        "MessagingApiPOSTDA209080",
+        "MessagingApiSendMessageModelB218FB47",
+        "RequestValidatorB6FDBF18",
+      ],
+      "Properties": Object {
+        "Description": "Automatically created by the RestApi construct",
+        "RestApiId": Object {
+          "Ref": "MessagingApi6D1F8F71",
+        },
+      },
+      "Type": "AWS::ApiGateway::Deployment",
+    },
+    "MessagingApiDeploymentStageprod64BAE454": Object {
+      "DependsOn": Array [
+        "MessagingApiAccount295EFC8E",
+      ],
+      "Properties": Object {
+        "DeploymentId": Object {
+          "Ref": "MessagingApiDeploymentDDE83BBC0e533154786ab6901fdc7deb846ec796",
+        },
+        "RestApiId": Object {
+          "Ref": "MessagingApi6D1F8F71",
+        },
+        "StageName": "prod",
+      },
+      "Type": "AWS::ApiGateway::Stage",
+    },
+    "MessagingApiPOSTDA209080": Object {
+      "Properties": Object {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "POST",
+        "Integration": Object {
+          "Credentials": Object {
+            "Fn::GetAtt": Array [
+              "GatewayExecutionRole16B5E8DF",
+              "Arn",
+            ],
+          },
+          "IntegrationHttpMethod": "POST",
+          "IntegrationResponses": Array [
+            Object {
+              "ResponseTemplates": Object {
+                "application/json": "{\\"status\\": \\"message received\\"}",
+              },
+              "StatusCode": "200",
+            },
+            Object {
+              "ResponseTemplates": Object {
+                "application/json": "{\\"state\\":\\"error\\",\\"message\\":\\"$util.escapeJavaScript($input.path('$.errorMessage'))\\"}",
+              },
+              "SelectionPattern": "^[Error].*",
+              "StatusCode": "400",
+            },
+          ],
+          "PassthroughBehavior": "NEVER",
+          "RequestParameters": Object {
+            "integration.request.header.Content-Type": "'application/json'",
+          },
+          "RequestTemplates": Object {
+            "application/json": Object {
+              "Fn::Join": Array [
+                "",
+                Array [
+                  "Action=Publish&TopicArn=$util.urlEncode('",
+                  Object {
+                    "Ref": "SendMessageTopic124D0AB8",
+                  },
+                  "')&Message=$util.urlEncode($input.body)",
+                ],
+              ],
+            },
+          },
+          "Type": "AWS",
+          "Uri": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:",
+                Object {
+                  "Ref": "AWS::Partition",
+                },
+                ":apigateway:",
+                Object {
+                  "Ref": "AWS::Region",
+                },
+                ":sns:path/",
+                Object {
+                  "Ref": "AWS::AccountId",
+                },
+                "/",
+                Object {
+                  "Fn::GetAtt": Array [
+                    "SendMessageTopic124D0AB8",
+                    "TopicName",
+                  ],
+                },
+              ],
+            ],
+          },
+        },
+        "MethodResponses": Array [
+          Object {
+            "StatusCode": "200",
+          },
+          Object {
+            "StatusCode": "400",
+          },
+        ],
+        "RequestModels": Object {
+          "application/json": Object {
+            "Ref": "MessagingApiSendMessageModelB218FB47",
+          },
+        },
+        "RequestValidatorId": Object {
+          "Ref": "RequestValidatorB6FDBF18",
+        },
+        "ResourceId": Object {
+          "Fn::GetAtt": Array [
+            "MessagingApi6D1F8F71",
+            "RootResourceId",
+          ],
+        },
+        "RestApiId": Object {
+          "Ref": "MessagingApi6D1F8F71",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
+    "MessagingApiSendMessageModelB218FB47": Object {
+      "Properties": Object {
+        "ContentType": "application/json",
+        "RestApiId": Object {
+          "Ref": "MessagingApi6D1F8F71",
+        },
+        "Schema": Object {
+          "$schema": "http://json-schema.org/draft-04/schema#",
+          "additionalProperties": false,
+          "properties": Object {
+            "message": Object {
+              "type": "string",
+            },
+            "number": Object {
+              "type": "number",
+            },
+          },
+          "required": Array [
+            "message",
+            "number",
+          ],
+          "type": "object",
+        },
+      },
+      "Type": "AWS::ApiGateway::Model",
+    },
+    "RequestValidatorB6FDBF18": Object {
+      "Properties": Object {
+        "Name": "sendMessageBodyValidator",
+        "RestApiId": Object {
+          "Ref": "MessagingApi6D1F8F71",
+        },
+        "ValidateRequestBody": true,
+        "ValidateRequestParameters": false,
+      },
+      "Type": "AWS::ApiGateway::RequestValidator",
+    },
+    "SendMessageTopic124D0AB8": Object {
+      "Properties": Object {
+        "ContentBasedDeduplication": true,
+        "FifoTopic": true,
+        "TopicName": "send-message-topic.fifo",
+      },
+      "Type": "AWS::SNS::Topic",
+    },
+  },
+  "Rules": Object {
+    "CheckBootstrapVersion": Object {
+      "Assertions": Array [
+        Object {
+          "Assert": Object {
+            "Fn::Not": Array [
+              Object {
+                "Fn::Contains": Array [
+                  Array [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  Object {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
+    },
+  },
+}
+`;
