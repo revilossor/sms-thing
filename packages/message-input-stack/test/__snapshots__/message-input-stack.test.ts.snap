@@ -123,7 +123,7 @@ Object {
       },
       "Type": "AWS::IAM::Role",
     },
-    "MessagingApiDeploymentDDE83BBC6baad3e47856979c6e9801a0a3ae43a4": Object {
+    "MessagingApiDeploymentDDE83BBC30995c93a5d25025dbdc8d3ba3160aad": Object {
       "DependsOn": Array [
         "MessagingApiPOSTDA209080",
         "MessagingApiSendMessageModelB218FB47",
@@ -143,7 +143,7 @@ Object {
       ],
       "Properties": Object {
         "DeploymentId": Object {
-          "Ref": "MessagingApiDeploymentDDE83BBC6baad3e47856979c6e9801a0a3ae43a4",
+          "Ref": "MessagingApiDeploymentDDE83BBC30995c93a5d25025dbdc8d3ba3160aad",
         },
         "RestApiId": Object {
           "Ref": "MessagingApi6D1F8F71",
@@ -266,15 +266,15 @@ Object {
             "message": Object {
               "type": "string",
             },
-            "number": Object {
-              "maximum": 15,
-              "minimum": 15,
-              "type": "number",
+            "phoneNumber": Object {
+              "maxLength": 11,
+              "minLength": 11,
+              "type": "string",
             },
           },
           "required": Array [
             "message",
-            "number",
+            "phoneNumber",
           ],
           "type": "object",
         },

@@ -40,13 +40,13 @@ export class MessageInputStack extends Stack {
           message: {
             type: JsonSchemaType.STRING // TODO min/max message length?
           },
-          number: {
-            type: JsonSchemaType.NUMBER,
-            minimum: 15,
-            maximum: 15
+          phoneNumber: {
+            type: JsonSchemaType.STRING,
+            minLength: 11,
+            maxLength: 11
           }
         },
-        required: ['message', 'number'],
+        required: ['message', 'phoneNumber'],
         additionalProperties: false
       }
     })
