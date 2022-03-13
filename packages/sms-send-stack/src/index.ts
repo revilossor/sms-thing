@@ -1,10 +1,14 @@
-import { SQSEvent } from 'aws-lambda'
+import { SQSEvent, SQSBatchResponse } from 'aws-lambda'
+
 import { getMessages } from './getMessages'
+import { sendMessages } from './sendMessages'
+import { getFailedItems } from './getFailedItems'
 
-export async function handler (event: SQSEvent): Promise<void> {
+export async function handler (event: SQSEvent): Promise<SQSBatchResponse> {
   const [sendable, unsendable] = getMessages(event)
-  console.dir({ sendable, unsendable })
-
-  // TODO SMSService
-  // - iterates over toSend, makes each promise, returns error ones from allSettled
+  const unsent = await sendMessages(sendable)
+  return getFailedItems(
+    ...unsendable,
+    ...unsent
+  )
 }

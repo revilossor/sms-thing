@@ -10,6 +10,13 @@ provider:
   name: aws
   runtime: nodejs14.x
   region: ${env:AWS_REGION}
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            - "SNS:Publish"
+          Resource: "*"
 
 functions:
   SMSSendLambda:
@@ -21,7 +28,6 @@ functions:
               - SMSSendQueue
               - Arn
           functionResponseType: ReportBatchItemFailures
-    # TODO permissions, environment - topic ref in env..?. snnder id in env?
 
 resources:
   Resources:
