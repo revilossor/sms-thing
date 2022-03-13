@@ -11,6 +11,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@aws-sdk/client-sns": "^3.54.0",
     "serverless": "^3.7.4"
   },
   "devDependencies": {

@@ -1,7 +1,10 @@
 import { SQSEvent } from 'aws-lambda'
-import { getMessagesToSend } from './getMessagesToSend'
+import { getMessages } from './getMessages'
 
 export async function handler (event: SQSEvent): Promise<void> {
-  const toSend = getMessagesToSend(event)
-  console.dir({ toSend })
+  const [sendable, unsendable] = getMessages(event)
+  console.dir({ sendable, unsendable })
+
+  // TODO SMSService
+  // - iterates over toSend, makes each promise, returns error ones from allSettled
 }
