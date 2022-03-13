@@ -11,7 +11,6 @@ async function sendMessage (request: SMSRequest): Promise<void> {
   await client.send(command)
 }
 
-// TODO unit test me
 export async function sendMessages (requests: SMSRequest[]): Promise<SMSRequest[]> {
   const result = await Promise.allSettled(
     requests.map(sendMessage)
