@@ -19,6 +19,10 @@ describe('message input stack', () => {
     })
   })
 
+  it('exports a "SendMessageTopicARN"', () => {
+    template.hasOutput('SendMessageTopicARN', {})
+  })
+
   it('matches the snapshot', () => {
     expect(template.toJSON()).toMatchSnapshot()
   })

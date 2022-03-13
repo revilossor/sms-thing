@@ -11,11 +11,92 @@ provider:
   runtime: nodejs14.x
   region: ${env:AWS_REGION}
 
-constructs:
-  SMSSendQueue:
-    type: queue
-    worker:
-      handler: dist/index.handler
+functions:
+  SMSSendLambda:
+    handler: dist/index.handler
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt:
+              - SMSSendQueue
+              - Arn
+          functionResponseType: ReportBatchItemFailures
+    # TODO permissions, environment - topic ref in env..?.
 
-plugins:
-  - serverless-lift
+resources:
+  Resources:
+    SMSSendQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: ${self:service}-SMSSendQueue.fifo
+        FifoQueue: true
+        ContentBasedDeduplication: true
+        RedrivePolicy:
+          deadLetterTargetArn: !GetAtt
+            - SMSSEndDLQ
+            - Arn
+          maxReceiveCount: 3
+
+    SMSSEndDLQ:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: ${self:service}-SMSSEndDLQ.fifo
+        FifoQueue: true
+
+    SMSSubscriptionDLQPolicy:
+      Type: AWS::SQS::QueuePolicy
+      Properties:
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Sid: "allow-sns-messages"
+              Effect: Allow
+              Principal: "*"
+              Resource: !GetAtt
+                - SMSSubscriptionDLQ
+                - Arn
+              Action: "SQS:SendMessage"
+              Condition:
+                ArnEquals:
+                  "aws:SourceArn": ${cf:MessageInputStack.SendMessageTopicARN}
+        Queues:
+          - Ref: SMSSubscriptionDLQ
+
+    SMSSubscriptionDLQ:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: ${self:service}-SMSSubscriptionDLQ.fifo
+        FifoQueue: true
+
+    SMSSendQueuePolicy:
+      Type: AWS::SQS::QueuePolicy
+      Properties:
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Sid: "allow-sns-messages"
+              Effect: Allow
+              Principal: "*"
+              Resource: !GetAtt
+                - SMSSendQueue
+                - Arn
+              Action: "SQS:SendMessage"
+              Condition:
+                ArnEquals:
+                  "aws:SourceArn": ${cf:MessageInputStack.SendMessageTopicARN}
+        Queues:
+          - Ref: SMSSendQueue
+
+    SMSSendQueueSendMessageTopicSubscription:
+      Type: "AWS::SNS::Subscription"
+      Properties:
+        TopicArn: ${cf:MessageInputStack.SendMessageTopicARN}
+        Endpoint: !GetAtt
+          - SMSSendQueue
+          - Arn
+        Protocol: sqs
+        RawMessageDelivery: "false"
+        RedrivePolicy:
+          deadLetterTargetArn: !GetAtt
+            - SMSSubscriptionDLQ
+            - Arn

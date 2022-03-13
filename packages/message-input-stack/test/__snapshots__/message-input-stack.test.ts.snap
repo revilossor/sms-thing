@@ -57,25 +57,31 @@ Object {
           ],
           "Version": "2012-10-17",
         },
-        "Policies": Array [
-          Object {
-            "PolicyDocument": Object {
-              "Statement": Array [
-                Object {
-                  "Action": "sns:Publish",
-                  "Effect": "Allow",
-                  "Resource": Object {
-                    "Ref": "SendMessageTopic124D0AB8",
-                  },
-                },
-              ],
-              "Version": "2012-10-17",
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "GatewayExecutionRoleDefaultPolicyD642E70C": Object {
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sns:Publish",
+              "Effect": "Allow",
+              "Resource": Object {
+                "Ref": "SendMessageTopic124D0AB8",
+              },
             },
-            "PolicyName": "PublishMessagePolicy",
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "GatewayExecutionRoleDefaultPolicyD642E70C",
+        "Roles": Array [
+          Object {
+            "Ref": "GatewayExecutionRole16B5E8DF",
           },
         ],
       },
-      "Type": "AWS::IAM::Role",
+      "Type": "AWS::IAM::Policy",
     },
     "MessagingApi6D1F8F71": Object {
       "Properties": Object {
@@ -128,7 +134,7 @@ Object {
       },
       "Type": "AWS::IAM::Role",
     },
-    "MessagingApiDeploymentDDE83BBC30995c93a5d25025dbdc8d3ba3160aad": Object {
+    "MessagingApiDeploymentDDE83BBCa811ff79b0e7b77c83dd1d6dd9db765a": Object {
       "DependsOn": Array [
         "MessagingApiPOSTDA209080",
         "MessagingApiSendMessageModelB218FB47",
@@ -148,7 +154,7 @@ Object {
       ],
       "Properties": Object {
         "DeploymentId": Object {
-          "Ref": "MessagingApiDeploymentDDE83BBC30995c93a5d25025dbdc8d3ba3160aad",
+          "Ref": "MessagingApiDeploymentDDE83BBCa811ff79b0e7b77c83dd1d6dd9db765a",
         },
         "RestApiId": Object {
           "Ref": "MessagingApi6D1F8F71",
@@ -186,7 +192,7 @@ Object {
           ],
           "PassthroughBehavior": "NEVER",
           "RequestParameters": Object {
-            "integration.request.header.Content-Type": "'application/json'",
+            "integration.request.header.Content-Type": "'application/x-www-form-urlencoded'",
           },
           "RequestTemplates": Object {
             "application/json": Object {
@@ -197,7 +203,7 @@ Object {
                   Object {
                     "Ref": "SendMessageTopic124D0AB8",
                   },
-                  "')&Message=$util.urlEncode($input.body)",
+                  "')&Message=$util.urlEncode($input.body)&MessageGroupId=api",
                 ],
               ],
             },
@@ -215,17 +221,7 @@ Object {
                 Object {
                   "Ref": "AWS::Region",
                 },
-                ":sns:path/",
-                Object {
-                  "Ref": "AWS::AccountId",
-                },
-                "/",
-                Object {
-                  "Fn::GetAtt": Array [
-                    "SendMessageTopic124D0AB8",
-                    "TopicName",
-                  ],
-                },
+                ":sns:path//",
               ],
             ],
           },
