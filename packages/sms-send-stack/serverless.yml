@@ -21,7 +21,7 @@ functions:
               - SMSSendQueue
               - Arn
           functionResponseType: ReportBatchItemFailures
-    # TODO permissions, environment - topic ref in env..?.
+    # TODO permissions, environment - topic ref in env..?. snnder id in env?
 
 resources:
   Resources:
